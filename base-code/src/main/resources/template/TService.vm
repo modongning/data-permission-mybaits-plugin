@@ -1,0 +1,13 @@
+#set($classInfo=$collection.classInfo)
+#set($tableInfo=$collection.tableInfo)
+package ${classInfo.packageName}.service;
+
+import ${classInfo.classFullName};
+import com.x.base.BaseService;
+
+public interface ${classInfo.className}Service extends BaseService<${classInfo.className}, Long> {
+    /**
+     * 添加或更新
+     */
+    long saveOrUpdate(${classInfo.className} ${classInfo.handleName});
+}

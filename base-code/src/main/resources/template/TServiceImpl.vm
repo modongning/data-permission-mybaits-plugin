@@ -1,0 +1,118 @@
+#set($classInfo=$collection.classInfo)
+#set($tableInfo=$collection.tableInfo)
+package ${classInfo.packageName}.service.impl;
+
+import java.util.List;
+import java.util.ArrayList;
+import com.x.base.GlobalCode;
+import com.x.utils.data.Page;
+import com.x.shiro.JwtHelper;
+import com.x.validator.ValidationHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ${classInfo.packageName}.service.${classInfo.className}Service;
+import ${classInfo.packageName}.dao.${classInfo.className}Mapper;
+import ${classInfo.classFullName};
+
+@Service("${classInfo.handleName}Service")
+public class ${classInfo.className}ServiceImpl implements ${classInfo.className}Service {
+
+	@Autowired
+	private ${classInfo.className}Mapper ${classInfo.handleName}Mapper;
+
+	@Autowired
+	private JwtHelper jwtHelper;
+
+	/**
+	 *  根据ID查询
+	 */
+	@Override
+	public ${classInfo.className} findById(Long id){
+		return ${classInfo.handleName}Mapper.findById(id);
+	}
+
+	/**
+	 *  列表查询
+	 */
+	@Override
+	public List<${classInfo.className}> query(${classInfo.className} ${classInfo.handleName}){
+    	return ${classInfo.handleName}Mapper.query(${classInfo.handleName});
+	}
+
+    /**
+     * 分页查询
+     */
+	@Override
+    public <S,V> Page pageQuery(Page<S,V> page){
+		// 获取记录数
+		int totalCount = ${classInfo.handleName}Mapper.count(page.getEntity());
+		List<V> ${classInfo.handleName}List = new ArrayList<>();
+		if (0 < totalCount) {
+			${classInfo.handleName}List = ${classInfo.handleName}Mapper.pageQuery(page);
+		}
+		page.setData(${classInfo.handleName}List, totalCount);
+		return page;
+	}
+
+	/**
+	 * 新增
+	 */
+	@Override
+	@Transactional(rollbackFor = {RuntimeException.class})
+	public Long save(${classInfo.className} ${classInfo.handleName}){
+		ValidationHandler.validateEntity(${classInfo.handleName});
+		return ${classInfo.handleName}Mapper.save(${classInfo.handleName});
+	}
+
+	/**
+	 * 批量新增
+	 */
+	@Override
+	@Transactional(rollbackFor = {RuntimeException.class})
+	public int saveBatch(List<${classInfo.className}> ${classInfo.handleName}List){
+		${classInfo.handleName}List.stream().forEach(data -> ValidationHandler.validateEntity(data));
+		return ${classInfo.handleName}Mapper.saveBatch(${classInfo.handleName}List);
+	}
+
+	/**
+	 * 按主键更新全部字段
+	 */
+	@Override
+	@Transactional(rollbackFor = {RuntimeException.class})
+	public int update(${classInfo.className} ${classInfo.handleName}){
+		ValidationHandler.validateEntity(${classInfo.handleName});
+		return ${classInfo.handleName}Mapper.update(${classInfo.handleName});
+	}
+
+	/**
+	 * 按主键删除
+	 */
+	@Override
+	@Transactional(rollbackFor = {RuntimeException.class})
+	public int deleteById(Long id){
+		Long userId = jwtHelper.getUser().getIdentityId();
+
+		${classInfo.className} ${classInfo.handleName} = new ${classInfo.className}();
+		${classInfo.handleName}.setId(id);
+		${classInfo.handleName}.setModifyUserId(userId);
+		${classInfo.handleName}.setState(GlobalCode.INVALID);
+
+		return ${classInfo.handleName}Mapper.updateNotEmpty(${classInfo.handleName});
+	}
+
+    /**
+     * 添加或更新
+     * <p>添加时返回对象 ID</p>
+     * <p>更新时返回更新成功数量</p>
+     */
+    @Override
+    public long saveOrUpdate(${classInfo.className} ${classInfo.handleName}) {
+    	Long ${classInfo.handleName}Id = ${classInfo.handleName}.getId();
+    	if (null == ${classInfo.handleName}Id)
+    		return save(${classInfo.handleName});
+    	else
+    		return Long.parseLong(update(${classInfo.handleName}) + "");
+    }
+
+}

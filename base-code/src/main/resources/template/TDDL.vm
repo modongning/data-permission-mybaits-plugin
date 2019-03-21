@@ -1,0 +1,11 @@
+#set($tableInfo=$collection.tableInfo)
+#set($columns=$collection.columns)
+#set($keys=$collection.keys)
+CREATE TABLE `${tableInfo.tableName}` (
+  #foreach($column in $columns)
+  `${column.columnName}` ${column.columnType} ${column.notNull} ${column.autoIncrease} COMMENT '${column.comment}' #if($velocityCount < $columns.size()),#end
+  #end
+#if($keys.size() > 0)
+primary key(#foreach($key in $keys) `${key.keyColumn}` #if (${velocityCount}<${keys.size()}),#end #end)
+#end
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='${tableInfo.comment}';
