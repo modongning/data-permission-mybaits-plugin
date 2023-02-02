@@ -3,10 +3,13 @@
 ## 数据权限控制：
 
 - 目前控制的数据默认的字段是：company_id
+
   com.otoomo.datapermission.annotation.DataPermission.Mapping
   
   数据权限的字段，是可以通过@DataPermission的scope自定的。具体可以看使用案例
   com.otoomo.datapermission.annotation.DataPermission.scope
+  
+  //////TODO 后续计划：修改@DataPermission.Scope注解，不再需要通过Mapping枚举硬编码来指定字段。
 
 
 # 使用说明
